@@ -3,81 +3,82 @@ import flatpickr from 'flatpickr';
 
 import 'flatpickr/dist/flatpickr.min.css';
 
-import Notiflix from 'notiflix';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const inputDate = document.querySelector('#datetime-picker');
 const button = document.querySelector('[data-start]');
+const days = document.querySelector('[data-days]');
+const hours = document.querySelector('[data-hours]');
+const minutes = document.querySelector('[data-minutes]');
+const seconds = document.querySelector('[data-seconds]');
+const Clockface = document.querySelector('.timer');
+const field = document.querySelector('.field');
+const value = document.querySelector('.value');
+const label = document.querySelector('.label');
+
+
+button.disabled = true;
 
 const options = {
-    enableTime: true,
-    time_24hr: true,
-    defaultDate: new Date(),
-    minuteIncrement: 1,
-    onClose(selectedDates) {
-        console.log(selectedDates[0]);
-    },
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+  onClose(selectedDates) {
+    console.log(selectedDates[0]);
+    if (selectedDates[0] < Date.now()) {
+      Notify.failure('Please choose a date in the future');
+    } else {
+      button.disabled = false;
+      button.addEventListener('click', () => {
+        timer.start();
+      });
+        const timer = {
+            intervalId: null,
+        start() {
+          button.disabled = true;
+
+         this.intervalId = setInterval(() => {
+            const startTime = Date.now();
+            const deltaTime = selectedDates[0].getTime() - startTime;
+            const time = convertMs(deltaTime);
+            days.textContent = time.days;
+            hours.textContent = time.hours;
+            minutes.textContent = time.minutes;
+            seconds.textContent = time.seconds;
+
+            if (deltaTime <= 1000) {
+              clearInterval(this.intervalId);
+            }
+          }, 1000);
+        },
+      };
+    }
+  },
 };
 
 flatpickr(inputDate, options);
 
 
-let selectedDates = Date.now();
-
-const onClick = () => {
-    // const startTime = Date.now();
-
-    // console.log(startTime.getTime());
-
-    let selectedDates = Date.now();
-
-    console.log(selectedDates.getTime());
-    console.log(selectedDates.getTime() - Date.now().getTime());
-
-    if (selectedDates.getTime() < Date.now().getTime()) {
-      alert('Please choose a date in the future');
-      button.disabled = true;
-    }
-    button.disabled = false;
-}
-// selectedDates.addEventListener('click', onClick);
-
-
-
-
 function convertMs(ms) {
-  // Number of milliseconds per unit of time
-  const second = 1000;
-  const minute = second * 60;
-  const hour = minute * 60;
-  const day = hour * 24;
+        const second = 1000;
+        const minute = second * 60;
+        const hour = minute * 60;
+        const day = hour * 24;
 
-  // Remaining days
-  const days = Math.floor(ms / day);
-  // Remaining hours
-  const hours = Math.floor((ms % day) / hour);
-  // Remaining minutes
-  const minutes = Math.floor(((ms % day) % hour) / minute);
-  // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+        const days = addLeadingZero(Math.floor(ms / day));
+        const hours = addLeadingZero(Math.floor((ms % day) / hour));
+        const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
+        const seconds = addLeadingZero(Math.floor((((ms % day) % hour) % minute) / second));
 
-  return { days, hours, minutes, seconds };
-}
+        return { days, hours, minutes, seconds };
+    }
 
-console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
-
-function addLeadingZero(value){
-
-const hours = this.pad(
-      Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-    );
-    const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
-    const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
-
-    return { hours, mins, secs };
-}
-  
-  function pad(value) {
+function addLeadingZero(value) {
         return String(value).padStart(2, '0');
     }
+
+
+
+
+
