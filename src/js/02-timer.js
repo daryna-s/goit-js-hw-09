@@ -12,9 +12,32 @@ const hours = document.querySelector('[data-hours]');
 const minutes = document.querySelector('[data-minutes]');
 const seconds = document.querySelector('[data-seconds]');
 const Clockface = document.querySelector('.timer');
-const field = document.querySelector('.field');
-const value = document.querySelector('.value');
-const label = document.querySelector('.label');
+const field = document.querySelectorAll('.field');
+const value = document.querySelectorAll('.value');
+const label = document.querySelectorAll('.label');
+
+Clockface.style.display = `flex`;
+
+field.forEach(el => {
+  el.style.marginRight = '10px';
+});
+
+value.forEach(el => {
+  el.style.display = `flex`;
+  el.style.justifyContent = `center`;
+  el.style.fontSize = '32px';
+  el.style.fontFamily = 'Montserrat, sans-serif';
+  el.style.fontStyle = 'normal';
+});
+
+label.forEach(el => {
+  el.style.display = `block`;
+  el.style.fontSize = '12px';
+  el.style.fontWeight = `700`;
+  el.style.fontFamily = 'Montserrat, sans-serif';
+  el.style.fontStyle = 'normal';
+  el.style.textTransform = `uppercase`;
+});
 
 
 button.disabled = true;
