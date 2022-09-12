@@ -11,12 +11,12 @@ const days = document.querySelector('[data-days]');
 const hours = document.querySelector('[data-hours]');
 const minutes = document.querySelector('[data-minutes]');
 const seconds = document.querySelector('[data-seconds]');
-const Clockface = document.querySelector('.timer');
+const clockface = document.querySelector('.timer');
 const field = document.querySelectorAll('.field');
 const value = document.querySelectorAll('.value');
 const label = document.querySelectorAll('.label');
 
-Clockface.style.display = `flex`;
+clockface.style.display = `flex`;
 
 field.forEach(el => {
   el.style.marginRight = '10px';
